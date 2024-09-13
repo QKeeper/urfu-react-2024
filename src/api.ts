@@ -9,12 +9,12 @@ const Post = {
     return await this.instance.get("" + (id ? "?id=" + id : ""));
   },
   create: async function (data: IPost) {
-    return await this.instance.post("", { data });
+    return await this.instance.post("", data);
   },
   patch: async function (
-    data: Omit<IPost, "id"> & Required<Pick<IPost, "id">>
+    data: Omit<IPost, "id"> & Required<Pick<IPost, "id">>,
   ) {
-    return await this.instance.patch("?id=" + data.id, { data });
+    return await this.instance.patch("?id=" + data.id, data);
   },
   delete: async function (id?: string) {
     return await this.instance.delete("?id=" + id);
