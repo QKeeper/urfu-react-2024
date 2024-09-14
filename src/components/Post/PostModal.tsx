@@ -11,21 +11,22 @@ import TextareaAutosize from "react-textarea-autosize";
 export default function PostModal({ id, title, description }: Required<IPost>) {
   const { close } = useContext(ModalContext);
   const { deletePost, updatePost } = useContext(PostsActionsContext);
-  const [isPending, setIsPending] = useState(false);
+  const [isPendingSave, setIsPendingSave] = useState(false);
+  const [isPendingDelete, setIsPendingDelete] = useState(false);
   const [inputs, setInputs] = useState<Pick<IPost, "title" | "description">>({
     title,
     description,
   });
 
   async function handleDelete() {
-    setIsPending(true);
+    setIsPendingDelete(true);
     await API.Post.delete(id).then(() => deletePost?.(id));
     close?.();
   }
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setIsPending(true);
+    setIsPendingSave(true);
     await API.Post.put({
       id,
       title: inputs.title,
@@ -37,7 +38,9 @@ export default function PostModal({ id, title, description }: Required<IPost>) {
   return (
     <form className="relative" onSubmit={onSubmit}>
       <input
+        required
         className="w-full font-bold outline-none"
+        placeholder="Title"
         value={inputs.title}
         onChange={(e) =>
           setInputs((prev) => ({ ...prev, title: e.target.value }))
@@ -45,6 +48,8 @@ export default function PostModal({ id, title, description }: Required<IPost>) {
       />
       <div className="max-h-96 overflow-y-auto">
         <TextareaAutosize
+          required
+          placeholder="Description"
           className="w-full resize-none text-pretty text-sm outline-none"
           value={inputs.description}
           onChange={(e) =>
@@ -57,20 +62,28 @@ export default function PostModal({ id, title, description }: Required<IPost>) {
         <Button
           type="button"
           variant="outline"
+          className="w-16"
           onClick={handleDelete}
-          disabled={isPending}
+          disabled={isPendingDelete}
         >
-          Delete
+          {!isPendingDelete ? (
+            <span>Delete</span>
+          ) : (
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+              <SymbolIcon className="animate-spin" />
+            </motion.div>
+          )}
         </Button>
-        <Button type="submit">Save</Button>
+        <Button type="submit" disabled={isPendingSave} className="w-16">
+          {!isPendingSave ? (
+            <span>Save</span>
+          ) : (
+            <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
+              <SymbolIcon className="animate-spin" />
+            </motion.div>
+          )}
+        </Button>
       </div>
-      {isPending && (
-        <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center">
-          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }}>
-            <SymbolIcon className="animate-spin" />
-          </motion.div>
-        </div>
-      )}
     </form>
   );
 }
