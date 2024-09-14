@@ -1,12 +1,13 @@
 import { IPost } from "@/models";
 import { ChangeEvent, useContext, useState } from "react";
 import { ModalContext } from "../Modal/ModalContext";
-import cn, { ClassValue } from "clsx";
 import { API } from "@/api";
 import { PostsActionsContext } from "./PostsContext";
 import { SymbolIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import Button from "@ui/Button/Button";
+import Input from "../ui/Input/Input";
+import Textarea from "../ui/Textarea/Textarea";
 
 export default function Form() {
   type PostInputs = Pick<IPost, "title" | "description">;
@@ -19,20 +20,13 @@ export default function Form() {
   });
   const [isPending, setIsPending] = useState<boolean>(false);
 
-  const registerField = (
-    key: keyof PostInputs,
-    ...className: ClassValue[]
-  ) => ({
+  const registerField = (key: keyof PostInputs) => ({
     onChange: (
       e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
     ) => setInputs((prev) => ({ ...prev, [key]: e.target.value })),
     value: inputs[key],
     placeholder: key[0].toUpperCase() + key.slice(1).toLowerCase(),
     disabled: isPending,
-    className: cn(
-      "h-10 rounded border px-2 focus:border-neutral-950 outline-none duration-75 transition-colors resize-none disabled:opacity-50 disabled:cursor-not-allowed text-sm",
-      className,
-    ),
   });
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -48,8 +42,8 @@ export default function Form() {
       className="relative flex select-none flex-col gap-2"
     >
       <p>Create new Note</p>
-      <input required {...registerField("title")} autoFocus />
-      <textarea required {...registerField("description", "h-24 py-2")} />
+      <Input required {...registerField("title")} autoFocus />
+      <Textarea required {...registerField("description")} className="h-24" />
       <div className="mt-4 flex justify-end gap-2">
         <Button
           type="button"
