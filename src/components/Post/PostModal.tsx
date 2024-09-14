@@ -74,7 +74,12 @@ export default function PostModal({ id, title, description }: Required<IPost>) {
             </motion.div>
           )}
         </Button>
-        <Button type="submit" disabled={isPendingSave} className="w-16">
+        <Button
+          autoFocus
+          type="submit"
+          disabled={isPendingSave}
+          className="w-16"
+        >
           {!isPendingSave ? (
             <span>Save</span>
           ) : (

@@ -5,3 +5,15 @@
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 }
+
+::-webkit-scrollbar {
+  @apply w-1;
+}
+
+::-webkit-scrollbar-track {
+  @apply rounded-full bg-gray-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-gray-600;
+}

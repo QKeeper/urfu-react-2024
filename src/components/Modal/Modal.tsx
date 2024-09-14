@@ -38,7 +38,7 @@ export default function Modal() {
       {isOpen && (
         <motion.div
           layoutId="modal"
-          className="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black/40"
+          className="pointer-events-auto absolute bottom-0 left-0 right-0 top-0 flex items-center justify-center bg-black/50"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
