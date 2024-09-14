@@ -18,17 +18,17 @@ export default function Modal() {
 
   useEffect(() => {
     if (isOpen) {
-      addEventListener("click", handleClickOutside, { capture: true });
+      addEventListener("mousedown", handleClickOutside, { capture: true });
       addEventListener("keydown", handleEscape);
     } else {
-      removeEventListener("click", handleClickOutside, { capture: true });
+      removeEventListener("mousedown", handleClickOutside, { capture: true });
       removeEventListener("keydown", handleEscape);
     }
 
     document.body.style.pointerEvents = isOpen ? "none" : "auto";
 
     return () => {
-      removeEventListener("click", handleClickOutside, { capture: true });
+      removeEventListener("mousedown", handleClickOutside, { capture: true });
       removeEventListener("keydown", handleEscape);
     };
   }, [isOpen, handleClickOutside, handleEscape]);
