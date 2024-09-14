@@ -21,6 +21,6 @@ export interface IPostsContext {
 export interface IPostsActionsContext {
   setPosts?: (post: IPost[]) => void;
   createPost?: (post: IPost) => void;
-  patchPost?: (post: IPost) => void;
+  updatePost?: (post: IPost) => void;
   deletePost?: (id: string) => void;
 }

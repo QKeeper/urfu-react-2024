@@ -6,11 +6,16 @@ import { ModalContext } from "../Modal/ModalContext";
 import Button from "@ui/Button/Button";
 import { SymbolIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
+import TextareaAutosize from "react-textarea-autosize";
 
 export default function PostModal({ id, title, description }: Required<IPost>) {
   const { close } = useContext(ModalContext);
-  const { deletePost } = useContext(PostsActionsContext);
+  const { deletePost, updatePost } = useContext(PostsActionsContext);
   const [isPending, setIsPending] = useState(false);
+  const [inputs, setInputs] = useState<Pick<IPost, "title" | "description">>({
+    title,
+    description,
+  });
 
   async function handleDelete() {
     setIsPending(true);
@@ -18,17 +23,46 @@ export default function PostModal({ id, title, description }: Required<IPost>) {
     close?.();
   }
 
+  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsPending(true);
+    await API.Post.put({
+      id,
+      title: inputs.title,
+      description: inputs.description,
+    }).then(({ data }) => updatePost?.(data));
+    close?.();
+  }
+
   return (
-    <div className="relative">
-      <p className="font-bold">{title}</p>
+    <form className="relative" onSubmit={onSubmit}>
+      <input
+        className="w-full font-bold outline-none"
+        value={inputs.title}
+        onChange={(e) =>
+          setInputs((prev) => ({ ...prev, title: e.target.value }))
+        }
+      />
       <div className="max-h-96 overflow-y-auto">
-        <p className="text-pretty text-sm">{description}</p>
+        <TextareaAutosize
+          className="w-full resize-none text-pretty text-sm outline-none"
+          value={inputs.description}
+          onChange={(e) =>
+            setInputs((prev) => ({ ...prev, description: e.target.value }))
+          }
+          maxRows={8}
+        />
       </div>
       <div className="mt-4 flex justify-end gap-2">
-        <Button type="button" onClick={handleDelete} variant="outline">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={handleDelete}
+          disabled={isPending}
+        >
           Delete
         </Button>
-        <Button variant="outline">Edit</Button>
+        <Button type="submit">Save</Button>
       </div>
       {isPending && (
         <div className="fixed bottom-0 left-0 right-0 top-0 flex items-center justify-center">
@@ -37,6 +71,6 @@ export default function PostModal({ id, title, description }: Required<IPost>) {
           </motion.div>
         </div>
       )}
-    </div>
+    </form>
   );
 }

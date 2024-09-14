@@ -34,7 +34,7 @@ export function PostsProvider({ children }: { children: ReactNode }) {
     () => ({
       setPosts: (posts: IPost[]) => setPostsLS(posts),
       createPost: (post: IPost) => setPostsLS((prev) => [post, ...prev]),
-      patchPost: (post: IPost) =>
+      updatePost: (post: IPost) =>
         setPostsLS((prev) =>
           prev.map((old) => (old.id == post.id ? post : old)),
         ),

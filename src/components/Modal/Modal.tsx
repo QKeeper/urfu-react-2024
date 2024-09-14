@@ -11,17 +11,27 @@ export default function Modal() {
     [close],
   );
 
+  const handleEscape = useCallback(
+    (e: KeyboardEvent) => e.key == "Escape" && close?.(),
+    [close],
+  );
+
   useEffect(() => {
-    if (isOpen)
+    if (isOpen) {
       addEventListener("click", handleClickOutside, { capture: true });
-    else removeEventListener("click", handleClickOutside, { capture: true });
+      addEventListener("keydown", handleEscape);
+    } else {
+      removeEventListener("click", handleClickOutside, { capture: true });
+      removeEventListener("keydown", handleEscape);
+    }
 
     document.body.style.pointerEvents = isOpen ? "none" : "auto";
 
     return () => {
       removeEventListener("click", handleClickOutside, { capture: true });
+      removeEventListener("keydown", handleEscape);
     };
-  }, [isOpen, handleClickOutside]);
+  }, [isOpen, handleClickOutside, handleEscape]);
 
   return (
     <AnimatePresence>
