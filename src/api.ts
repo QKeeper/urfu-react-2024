@@ -6,15 +6,13 @@ const baseURL = import.meta.env.VITE_API;
 const Post = {
   instance: axios.create({ baseURL: baseURL + "/posts" }),
   get: async function (id?: string) {
-    return await this.instance.get("" + (id ? "?id=" + id : ""));
+    return await this.instance.get<Required<IPost>[]>(id ? "?id=" + id : "");
   },
-  create: async function (data: IPost) {
-    return await this.instance.post("", data);
+  create: async function (data: Pick<IPost, "title" | "description">) {
+    return await this.instance.post<Required<IPost>>("", data);
   },
-  patch: async function (
-    data: Omit<IPost, "id"> & Required<Pick<IPost, "id">>,
-  ) {
-    return await this.instance.patch("?id=" + data.id, data);
+  put: async function (data: Omit<IPost, "id"> & Required<Pick<IPost, "id">>) {
+    return await this.instance.put("?id=" + data.id, data);
   },
   delete: async function (id?: string) {
     return await this.instance.delete("?id=" + id);
