@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  @apply font-inter;
 }
 
 ::-webkit-scrollbar {
@@ -16,4 +16,10 @@
 
 ::-webkit-scrollbar-thumb {
   @apply rounded-full bg-gray-600;
+}
+
+h1,
+h2,
+h3 {
+  @apply font-geologica;
 }
