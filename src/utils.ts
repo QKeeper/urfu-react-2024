@@ -18,7 +18,8 @@ export function toRelativeDate(date?: string) {
   }
   passed /= 24;
 
-  return date;
+  const r = Math.round(passed);
+  return `${r} ${declOfNum(r, ["день", "дня", "дней"])} назад`;
 }
 
 export function declOfNum(n: number, titles: [string, string, string]) {
