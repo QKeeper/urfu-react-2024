@@ -18,8 +18,8 @@ export default function Homepage() {
 
   return (
     <div className="container my-4">
-      <h1 className="text-xl font-bold">All notes</h1>
-      <div className="grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
+      <h1 className="text-xl">All Notes ({posts.length})</h1>
+      <div className="mt-2 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
         <NewPost />
         {posts
           .sort((a, b) => CompareDateStrings(a.createdAt, b.createdAt))

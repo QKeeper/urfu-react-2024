@@ -11,7 +11,7 @@ function Footer() {
         <a
           target="_blank"
           href="https://github.com/QKeeper/urfu-react-2024"
-          className="relative flex items-center gap-1 hover:underline"
+          className="flex items-center gap-1 hover:underline"
         >
           <GitHubLogoIcon />
           GitHub

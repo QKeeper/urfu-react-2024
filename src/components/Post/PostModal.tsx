@@ -39,7 +39,7 @@ export default function PostModal({ id, title, description }: Required<IPost>) {
     <form className="relative" onSubmit={onSubmit}>
       <input
         required
-        className="font-geologica w-full text-xl font-medium outline-none"
+        className="w-full text-xl font-medium outline-none"
         placeholder="Title"
         value={inputs.title}
         onChange={(e) =>
