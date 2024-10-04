@@ -1,5 +1,5 @@
 import { IPost } from "@/models";
-import { ChangeEvent, useContext, useState } from "react";
+import { forwardRef, useContext, useState } from "react";
 import { ModalContext } from "../Modal/ModalContext";
 import { API } from "@/api";
 import { PostsActionsContext } from "./PostsContext";
@@ -8,33 +8,25 @@ import { motion } from "framer-motion";
 import Button from "@ui/Button/Button";
 import Input from "../ui/Input/Input";
 import Textarea from "../ui/Textarea/Textarea";
+import { useForm } from "react-hook-form";
 
-export default function Form() {
+const Form = forwardRef(() => {
   type PostInputs = Pick<IPost, "title" | "description">;
 
   const { close } = useContext(ModalContext);
   const { createPost } = useContext(PostsActionsContext);
-  const [inputs, setInputs] = useState<PostInputs>({
-    title: "",
-    description: "",
-  });
   const [isPending, setIsPending] = useState<boolean>(false);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<PostInputs>();
 
-  const registerField = (key: keyof PostInputs) => ({
-    onChange: (
-      e: ChangeEvent<HTMLInputElement> | ChangeEvent<HTMLTextAreaElement>,
-    ) => setInputs((prev) => ({ ...prev, [key]: e.target.value })),
-    value: inputs[key],
-    placeholder: key[0].toUpperCase() + key.slice(1).toLowerCase(),
-    disabled: isPending,
-  });
-
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  const onSubmit = handleSubmit(async (inputs) => {
     setIsPending(true);
     await API.Post.create(inputs).then(({ data }) => createPost?.(data));
     close?.();
-  }
+  });
 
   return (
     <form
@@ -42,8 +34,33 @@ export default function Form() {
       className="relative flex select-none flex-col gap-2"
     >
       <p>Create new Note</p>
-      <Input required {...registerField("title")} autoFocus />
-      <Textarea required {...registerField("description")} className="h-24" />
+      <Input
+        disabled={isPending}
+        placeholder="Title"
+        {...register("title", {
+          minLength: 2,
+          maxLength: 70,
+          required: true,
+        })}
+      />
+      {errors.title && (
+        <p className="text-sm text-red-500">
+          {errors.title.type == "minLength" && "At least 2 characters required"}
+          {errors.title.type == "maxLength" && "Up to 70 characters required"}
+          {errors.title.type == "required" && "Title required"}
+        </p>
+      )}
+      <Textarea
+        disabled={isPending}
+        placeholder="Description"
+        className="h-24"
+        {...register("description", { required: true })}
+      />
+      {errors.description && (
+        <p className="text-sm text-red-500">
+          {errors.description.type == "required" && "Description required"}
+        </p>
+      )}
       <div className="mt-4 flex justify-end gap-2">
         <Button
           type="button"
@@ -66,4 +83,6 @@ export default function Form() {
       )}
     </form>
   );
-}
+});
+
+export default Form;

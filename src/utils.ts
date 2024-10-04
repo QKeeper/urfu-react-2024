@@ -1,6 +1,4 @@
-export function toRelativeDate(date?: string) {
-  if (!date) return "ошибка";
-
+export function toRelativeDate(date: string) {
   let passed = (Date.now() - new Date(date).getTime()) / 1000;
 
   if (passed < 60) return "сейчас";
@@ -33,11 +31,10 @@ export function declOfNum(n: number, titles: [string, string, string]) {
 }
 
 export function CompareDateStrings(
-  date1?: string,
-  date2?: string,
+  date1: string,
+  date2: string,
   reverse?: boolean,
 ) {
-  if (!date1 || !date2) return 0;
   return (
     (reverse ? -1 : 1) * new Date(date2).getTime() - new Date(date1).getTime()
   );

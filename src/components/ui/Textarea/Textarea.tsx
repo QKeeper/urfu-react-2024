@@ -1,9 +1,20 @@
 import cn from "clsx";
-import { ComponentProps } from "react";
+import { ComponentPropsWithoutRef, forwardRef } from "react";
 import { textareaStyles, TextareaVariantProps } from "./TextareaStyles";
 
-export type TextareaProps = TextareaVariantProps & ComponentProps<"textarea">;
+export type TextareaProps = TextareaVariantProps &
+  ComponentPropsWithoutRef<"textarea">;
 
-export default function Textarea({ className, ...rest }: TextareaProps) {
-  return <textarea {...rest} className={cn(textareaStyles({}), className)} />;
-}
+const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
+  ({ className, ...rest }: TextareaProps, ref) => {
+    return (
+      <textarea
+        {...rest}
+        className={cn(textareaStyles({}), className)}
+        ref={ref}
+      />
+    );
+  },
+);
+
+export default Textarea;

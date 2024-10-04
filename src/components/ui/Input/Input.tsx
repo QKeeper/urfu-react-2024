@@ -1,9 +1,15 @@
 import cn from "clsx";
-import { ComponentProps } from "react";
+import { ComponentProps, forwardRef } from "react";
 import { inputStyles, InputVariantProps } from "./InputStyles";
 
 export type InputProps = InputVariantProps & ComponentProps<"input">;
 
-export default function Input({ className, ...rest }: InputProps) {
-  return <input {...rest} className={cn(inputStyles({}), className)} />;
-}
+const Input = forwardRef<HTMLInputElement, InputProps>(
+  ({ className, ...rest }: InputProps, ref) => {
+    return (
+      <input {...rest} className={cn(inputStyles({}), className)} ref={ref} />
+    );
+  },
+);
+
+export default Input;
